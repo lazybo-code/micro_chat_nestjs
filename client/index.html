@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Chat</title>
+  <script src="static/socket.io.js"></script>
+  <style>
+    .message pre {
+      border-radius: 5px;
+      border: 1px solid #333;
+      padding: 20px;
+      max-height: 100px;
+      max-width: 400px;
+      overflow: auto;
+      white-space: pre-wrap;
+      word-wrap: break-word;
+    }
+  </style>
+</head>
+<body>
+<div>
+  <label>
+    Token:
+    <input name="token" value=""/>
+    <input onclick="login()" type="button" value="登录"/>
+  </label>
+</div>
+<div class="message">
+  <pre></pre>
+</div>
+
+<script>
+  let socket = null;
+  const pre = document.querySelector('.message pre');
+  const input = document.querySelector('input[name=token]');
+  const hr = '===================================================';
+
+  function login() {
+    const token = input.value;
+    socket = io('http://localhost:3000?authorization=Bearer ' + token);
+    monitor('connect');
+    monitor('friend');
+    monitor('message');
+    monitor('disconnect');
+  }
+
+  function monitor(type) {
+    socket.on(type, function(data) {
+      pre.innerHTML += `\n${hr}`;
+      pre.innerHTML += `\nevent: ${type}`;
+      pre.innerHTML += `\ndata: ${typeof data == 'string' ? data : JSON.stringify(data, null, 2)}`;
+      pre.innerHTML += `\n${hr}`;
+      pre.scrollTo({
+        top: pre.scrollHeight
+      })
+    });
+  }
+</script>
+</body>
+</html>
