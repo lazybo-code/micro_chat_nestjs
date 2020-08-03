@@ -24,3 +24,34 @@ export class SendTextMessageDto {
   @IsString({ message: "消息不能空" })
   text: string;
 }
+
+export class SendImageMessageDto {
+  @ApiProperty({ type: 'string', format: 'binary' })
+  image: IFileType;
+}
+
+export class SendVoiceMessageDto {
+  @ApiProperty({ type: 'string', format: 'binary' })
+  voice: IFileType;
+}
+
+export interface IFileType {
+  /** Field name specified in the form */
+  fieldname: string;
+  /** Name of the file on the user's computer */
+  originalname: string;
+  /** Encoding type of the file */
+  encoding: string;
+  /** Mime type of the file */
+  mimetype: string;
+  /** Size of the file in bytes */
+  size: number;
+  /** The folder to which the file has been saved (DiskStorage) */
+  destination: string;
+  /** The name of the file within the destination (DiskStorage) */
+  filename: string;
+  /** Location of the uploaded file (DiskStorage) */
+  path: string;
+  /** A Buffer of the entire file (MemoryStorage) */
+  buffer: Buffer;
+}

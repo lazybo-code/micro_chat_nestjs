@@ -7,11 +7,11 @@ export class AlipayService {
   private alipaySdk: AlipaySdk = null;
 
   constructor() {
-    this.alipaySdk = new AlipaySdk({
-      appId: '',
-      privateKey: ``,
-      alipayPublicKey: ``,
-    });
+    // this.alipaySdk = new AlipaySdk({
+    //   appId: '',
+    //   privateKey: ``,
+    //   alipayPublicKey: ``,
+    // });
   }
 
   async payTest() {

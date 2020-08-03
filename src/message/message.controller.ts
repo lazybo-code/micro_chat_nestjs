@@ -1,9 +1,20 @@
-import { Body, Controller, Get, Post, Query, Req, UseGuards } from '@nestjs/common';
-import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
+import {
+  BadRequestException,
+  Body,
+  Controller,
+  Get,
+  Post,
+  Query,
+  Req, UploadedFile,
+  UseGuards,
+  UseInterceptors,
+} from '@nestjs/common';
+import { ApiBearerAuth, ApiBody, ApiConsumes, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { AuthGuards } from '../auth/auth.guards';
 import { MessageService } from './message.service';
-import { GetMessageDto, SendTextMessageDto } from './message.dto';
+import { GetMessageDto, IFileType, SendImageMessageDto, SendTextMessageDto, SendVoiceMessageDto } from './message.dto';
 import { result } from '../utils/basis.util';
+import { FileInterceptor } from '@nestjs/platform-express';
 
 @ApiTags('消息')
 @UseGuards(AuthGuards)
@@ -32,12 +43,41 @@ export class MessageController {
   }
 
   @ApiOperation({ summary: '发送图片消息' })
+  @ApiConsumes('multipart/form-data')
+  @ApiBody({
+    type: SendImageMessageDto,
+    required: true,
+  })
+  @UseInterceptors(FileInterceptor('image', {
+    fileFilter(req, file, callback) {
+      if (file.mimetype.match(/image\/*/) == null) {
+        callback(new BadRequestException('图片类型错误'), false);
+      }
+      callback(null, true);
+    }
+  }))
   @Post('image')
-  async sendImageMessage() {
+  async sendImageMessage(@UploadedFile() file: IFileType) {
+    return file;
   }
 
   @ApiOperation({ summary: '发送语音消息' })
+  @ApiConsumes('multipart/form-data')
+  @ApiBody({
+    type: SendVoiceMessageDto,
+    required: true,
+  })
+  @UseInterceptors(FileInterceptor('voice', {
+    fileFilter(req, file, callback) {
+      if (file.mimetype.match(/audio\/*/) == null) {
+        callback(new BadRequestException('音频类型错误'), false);
+      }
+      callback(null, true);
+    }
+  }))
   @Post('voice')
-  async sendVoiceMessage() {
+  async sendVoiceMessage(@UploadedFile() file: IFileType) {
+    const { buffer, ...param } = file;
+    return param;
   }
 }
