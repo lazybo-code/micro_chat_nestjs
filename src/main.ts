@@ -13,6 +13,7 @@ async function bootstrap() {
     preflightContinue: false,
     optionsSuccessStatus: 204,
   });
+  app.setGlobalPrefix('api');
   const document = SwaggerModule.createDocument(
     app,
     new DocumentBuilder()
