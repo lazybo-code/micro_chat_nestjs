@@ -18,6 +18,15 @@
   "synchronize": true
 }
 ```
+
+在根目录建立: .env
+```
+MONGODB=mongodb://host/name
+
+REDIS_HOST=
+REDIS_PORT=
+REDIS_NAME=
+```
 # 安装依赖
 ```
  yarn install or npm install

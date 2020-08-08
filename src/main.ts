@@ -2,6 +2,7 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { ValidationPipe } from '@nestjs/common';
+import * as os from 'os';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -25,4 +26,17 @@ async function bootstrap() {
   SwaggerModule.setup('api-doc', app, document);
   return app;
 }
-bootstrap().then(app => app.listen(3000));
+
+const port = process.env.port || 3000;
+
+bootstrap()
+.then(app => app.listen(port))
+.then(() => {
+  const network = os.networkInterfaces();
+  for(const net in network) {
+    const info = network[net].find(v => v.family === 'IPv4');
+    if (info != null) {
+      console.log(`[nest] network: http://${info.address}:${port}`);
+    }
+  }
+});
