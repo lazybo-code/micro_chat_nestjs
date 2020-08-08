@@ -19,7 +19,7 @@
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
-    "pm2": "pm2 start --name chat-Api dist/main.js -f"
+    "pm2": "pm2 delete chat-Api && pm2 start --name chat-Api dist/main.js"
   },
   "dependencies": {
     "@nestjs/bull": "^0.1.2",
