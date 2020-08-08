@@ -27,6 +27,7 @@ async function bootstrap() {
   return app;
 }
 
+// 测试远程自动同步
 const port = process.env.port || 46632;
 
 bootstrap()
